@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MISPLACED</title>
+    <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../css/stylesheet.css" type="text/css"/>-->
+    <link rel="stylesheet" href="game.css" type="text/css"/>
+
+    <script>
+        var dojoConfig = {
+            baseUrl: ".",
+            packages: [
+                { name: "dojo", location: "dojo"},
+                { name: "game", location: "game"}
+            ]
+        }
+    </script>
+    <script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"></script>
+    <script>
+        var game;
+        require(["dojo/ready"], function(ready) {
+            ready(function() {
+                require(["game/Game"], function(g) {
+                    game = new g();
+                    game.init();
+                });
+            });
+        });
+
+    </script>
+</head>
+<body>
+<div id="gameArea">
+    <div id="leftColumn" class="w3-container w3-third tab-parent">
+        <div id="animationPane"></div>
+    </div>
+    <div id="managementPane" class="w3-container w3-third tab-parent"></div>
+    <div class="w3-container w3-third tab-parent" id="rightColumn">
+        <div id="statisticsPane">
+        </div>
+    </div>
+    <div id="statusBar" class="w3-container">
+        <div class="w3-third">
+            <div class="w3-row" style="height: 1.5em; margin: .25em 0">
+                <span class="w3-col m4 l3">Water</span>
+                <div class="meter w3-col m8 l9"><div style="background-color: deepskyblue"></div></div>
+            </div>
+            <div class="w3-row" style="height: 1.5em; margin: .25em 0;">
+                <span class="w3-col m4 l3">Food</span>
+                <div class="meter w3-col m8 l9"><div style="background-color: saddlebrown"></div></div>
+            </div>
+        </div>
+        <div class="w3-container w3-third"></div>
+        <div class = "w3-container w3-third">
+            <div class="w3-container w3-quarter"><h3>Progression</h3></div>
+            <div class="w3-container w3-half"><div class="meter w3-third" style="margin-top: 1vh"><div style="background-color: crimson; width: 30%"></div></div></div>
+            <div class="w3-container w3-quarter">
+                <button class="w3-btn w3-medium w3-round w3-dark-grey w3-hover-crimson" style="margin-top: 1vh">View Progression</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+</script>
+</body>
+</html>

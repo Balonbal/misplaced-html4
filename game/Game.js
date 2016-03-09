@@ -1,0 +1,159 @@
+/**
+ * Created by Sly on 21.01.2016.
+ */
+"use strict";
+function l(l) {return dojo.byId(l);}
+define(["dojo/_base/declare", "game/controller/ManController", "game/controller/StatsController", "game/controller/ResourceController", "game/UI/ManualTab", "game/UI/StatsTab", "game/UI/ResourcesTab", "game/core/Timer", "game/core/TabContainer", "game/UI/SaveTab"], function(declare, man, stat, res, ManTab, StatTab, ResTab, Timer, TabContainer, SaveTab) {
+    return declare(null, {
+        tabContainers: [],
+        controllers: [],
+        worker: null,
+        lastTick: null,
+        timer: null,
+        saveKey: "Gabeorama-web-game",
+        constructor: function() {
+            //Initiate controllers and add to array
+            this.stats = new stat(this);
+            this.manual = new man(this);
+            this.resources = new res(this);
+            this.controllers.push(this.stats);
+            this.controllers.push(this.manual);
+            this.controllers.push(this.resources);
+
+            var animationC = new TabContainer(l("animationPane"));
+            var statisticsC = new TabContainer(l("statisticsPane"));
+            var managementC = new TabContainer(l("managementPane"));
+
+            animationC.AddTab(new ManTab("Manual",this), true);
+            statisticsC.AddTab(new StatTab("Stats", this), true);
+            statisticsC.AddTab(new ResTab("Resources", this), true);
+            managementC.AddTab(new SaveTab("Save", this), true);
+
+            this.tabContainers = [
+                animationC,
+                statisticsC,
+                managementC
+            ];
+            this.lastTick = Date.now();
+        },
+
+        init: function() {
+            for (var t in this.tabContainers) {
+                var tab = this.tabContainers[t];
+                tab.ChangeTab(tab.tabs[0]);
+            }
+
+            this.manual.SetProduction("lootWreckage", true);
+
+            //Load save
+            this.Load();
+
+            //Start webworker
+            var wworker = new Blob(["onmessage = function(e) {setInterval(function(){ postMessage('tick'); }, 50); }"]);
+            this.worker = new Worker(window.URL.createObjectURL(wworker));
+            this.worker.addEventListener('message', dojo.hitch(this, function(e) {
+                this.tick();
+            }));
+            this.worker.postMessage("tick");
+
+            this.timer = new Timer();
+            this.timer.AddEvent(function() {
+                game.Save();
+            }, 6000);
+        },
+
+        tick: function() {
+            var delta = Date.now() - game.lastTick;
+            for (var tab in game.tabContainers) {
+                game.tabContainers[tab].Update();
+            }
+
+            for (var m in this.controllers) {
+                var controller = this.controllers[m];
+                controller.Update(delta);
+            }
+
+            game.timer.Update();
+
+            //Update tick
+            game.lastTick = Date.now();
+        },
+        CreateSave: function() {
+            var arr = {};
+            arr.lastTick = this.lastTick;
+            arr.stats = this.stats.getSave();
+            arr.manual = this.manual.getSave();
+            arr.resources = this.resources.getSave();
+            return arr;
+        },
+        Save: function() {
+            var save = this.CreateSave();
+            window.localStorage[this.saveKey] = window.btoa(JSON.stringify(save));
+            console.log("Game saved.");
+        },
+        Load: function(save) {
+            //load from localStorage
+            if (!save) {
+                try {
+                    save = JSON.parse(window.atob(window.localStorage[this.saveKey]));
+                } catch (e) {
+                    save = false;
+                }
+            }
+            //Call loaders
+            if (save) {
+                this.manual.LoadSave(save.manual);
+                this.stats.LoadSave(save.stats);
+                this.resources.LoadSave(save.resources);
+            }
+        }
+    });
+});
+
+function createLayer(parent, columns, rows) {
+    var base = document.createElement("div");
+    base.className = "buildingBase";
+    base.style.position = "relative";
+    base.style.height = "100%";
+
+    var width = 100 / columns;
+    var height = 100 / rows;
+    for (var i = 0; i < rows; i++) {
+        for (var j=0; j<columns; j++) {
+            var elem = document.createElement("div");
+            elem.style.width = width + "%";
+            elem.style.height = height + "%";
+            elem.style.left = width*j + "%";
+            elem.style.top = height*i + "%";
+            elem.style.position = "absolute";
+            elem.style.backgroundColor = "white";
+            elem.style.border = "1px solid black";
+            base.appendChild(elem);
+        }
+    }
+
+    parent.appendChild(base);
+}
+
+function AddEvent(element, event, func) {
+    element.addEventListener(event, func);
+}
+
+var layout =
+    "0000000000000000000000000" +
+    "000#####000###00000#####0" +
+    "00######00#####000######0" +
+    "0##000000#00000#0##000000" +
+    "0##000000#00000#0##000000" +
+    "0##000000#00000#0##000000" +
+    "0##000000#00000#0##000000" +
+    "00#####00#00000#00#####00" +
+    "000#####0#00000#000#####0" +
+    "000000##0#00000#000000##0" +
+    "000000##0#00000#000000##0" +
+    "000000##0#00000#000000##0" +
+    "000000##0#00000#000000##0" +
+    "0######000#####00######00" +
+    "0#####00000###000#####000" +
+    "0000000000000000000000000";
+
