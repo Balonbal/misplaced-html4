@@ -66,7 +66,7 @@ define(["dojo/_base/declare", "game/controller/ManController", "game/controller/
 
             /* Tooltip */
             this.tooltip = d.create("div", {
-                className: "w3-card-8 w3-round w3-brown tooltip",
+                className: "w3-card-8 w3-round tooltip",
                 style: "display: none;",
                 innerHTML: ""
             }, l("gameArea"));
@@ -122,13 +122,13 @@ define(["dojo/_base/declare", "game/controller/ManController", "game/controller/
                 this.resources.LoadSave(save.resources);
             }
         },
-        DisplayTooltip: function(content, parent) {
+        DisplayTooltip: function(content) {
+            d.empty(this.tooltip);
             this.tooltip.appendChild(content);
-            this.tooltip.style.display = "block";
+            this.tooltip.style.display = "table";
             this.capture.resume();
         },
         RemoveTooltip: function() {
-            d.empty(this.tooltip);
             this.tooltip.style.display = "none";
             this.capture.pause();
         }
