@@ -22,7 +22,7 @@
         var game;
         require(["dojo/ready"], function(ready) {
             ready(function() {
-                require(["game/Game"], function(g) {
+                require(["game/Game", "dojo/on"], function(g) {
                     game = new g();
                     game.init();
                 });

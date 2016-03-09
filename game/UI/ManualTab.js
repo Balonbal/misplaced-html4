@@ -1,11 +1,12 @@
 /**
  * Created by Sly on 02.03.2016.
  */
-define(["dojo/_base/declare", "game/core/Tab", "dojo/dom-construct", "dojo/mouse", "dojo/on"], function(declare, Tab, d, mouse, on) {
+define(["dojo/_base/declare", "game/core/Tab", "dojo/dom-construct", "dojo/mouse", "dojo/on", "dojo/_base/lang"], function(declare, Tab, d, mouse, on, lang) {
     "use strict";
     return declare(Tab, {
         elements: null,
         production: null,
+        table: null,
         render: function(container) {
             (container) || (container = this.parent);
             d.empty(container);
@@ -35,23 +36,13 @@ define(["dojo/_base/declare", "game/core/Tab", "dojo/dom-construct", "dojo/mouse
                 innerHTML: " {{ description }}"
             }, right);
 
-            /* Tooltip */
+            this.table = this.CreateTable(game.manual.production);
 
-            var tooltip = d.create("div", {
-                className: "w3-card-8 w3-round w3-brown tooltip",
-                style: "display: none;",
-                innerHTML: "test"
-            }, container);
-
-            on(text, mouse.enter, function() {
-                tooltip.style.display = "block";
-            });
+            on(text, mouse.enter, lang.hitch(this, function() {
+                game.DisplayTooltip(this.table, this.elements.text);
+            }));
             on(text, mouse.leave, function() {
-                tooltip.style.display = "none";
-            });
-            on(text, "mousemove", function(e) {
-                tooltip.style.left = e.clientX + 1 + "px";
-                tooltip.style.top = e.clientY + 1 + "px";
+                game.RemoveTooltip();
             });
 
             //Add references
@@ -63,8 +54,7 @@ define(["dojo/_base/declare", "game/core/Tab", "dojo/dom-construct", "dojo/mouse
                 meter: meter,
                 meterProgress: meterProgress,
                 meterLabel: meterLabel,
-                text: text,
-                tooltip: tooltip
+                text: text
             };
         },
         update: function() {
@@ -84,11 +74,10 @@ define(["dojo/_base/declare", "game/core/Tab", "dojo/dom-construct", "dojo/mouse
                 this.elements.header.innerHTML= prod.label;
                 this.elements.image.src = prod.image;
                 this.elements.text.innerHTML = prod.description;
-                d.empty(this.elements.tooltip);
-                this.elements.tooltip.appendChild(this.CreateTable(game.manual.production))
-
                 this.production = what;
+                this.table = this.CreateTable(game.manual.production);
             }
+
         },
         CreateTable: function(resources) {
             var table = d.toDom("<table><tr><th>Resource</th><th>Amount</th><th>Chance</th></tr></table>");

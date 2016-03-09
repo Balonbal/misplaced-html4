@@ -3,7 +3,7 @@
  */
 "use strict";
 function l(l) {return dojo.byId(l);}
-define(["dojo/_base/declare", "game/controller/ManController", "game/controller/StatsController", "game/controller/ResourceController", "game/UI/ManualTab", "game/UI/StatsTab", "game/UI/ResourcesTab", "game/core/Timer", "game/core/TabContainer", "game/UI/SaveTab"], function(declare, man, stat, res, ManTab, StatTab, ResTab, Timer, TabContainer, SaveTab) {
+define(["dojo/_base/declare", "game/controller/ManController", "game/controller/StatsController", "game/controller/ResourceController", "game/UI/ManualTab", "game/UI/StatsTab", "game/UI/ResourcesTab", "game/core/Timer", "game/core/TabContainer", "game/UI/SaveTab", "game/controller/UpgradeController", "game/UI/UpgradeTab", "dojo/dom-construct", "dojo/on"], function(declare, man, stat, res, ManTab, StatTab, ResTab, Timer, TabContainer, SaveTab, upg, UpgradeTab, d, on) {
     return declare(null, {
         tabContainers: [],
         controllers: [],
@@ -16,9 +16,11 @@ define(["dojo/_base/declare", "game/controller/ManController", "game/controller/
             this.stats = new stat(this);
             this.manual = new man(this);
             this.resources = new res(this);
+            this.upgrades = new upg(this);
             this.controllers.push(this.stats);
             this.controllers.push(this.manual);
             this.controllers.push(this.resources);
+            this.controllers.push(this.upgrades);
 
             var animationC = new TabContainer(l("animationPane"));
             var statisticsC = new TabContainer(l("statisticsPane"));
@@ -28,6 +30,7 @@ define(["dojo/_base/declare", "game/controller/ManController", "game/controller/
             statisticsC.AddTab(new StatTab("Stats", this), true);
             statisticsC.AddTab(new ResTab("Resources", this), true);
             managementC.AddTab(new SaveTab("Save", this), true);
+            managementC.AddTab(new UpgradeTab("Upgrades", this), true);
 
             this.tabContainers = [
                 animationC,
@@ -60,6 +63,18 @@ define(["dojo/_base/declare", "game/controller/ManController", "game/controller/
             this.timer.AddEvent(function() {
                 game.Save();
             }, 6000);
+
+            /* Tooltip */
+            this.tooltip = d.create("div", {
+                className: "w3-card-8 w3-round w3-brown tooltip",
+                style: "display: none;",
+                innerHTML: ""
+            }, l("gameArea"));
+
+            this.capture = on.pausable(document, "mousemove", function(e) {
+                game.tooltip.style.left = e.clientX + 1 + "px";
+                game.tooltip.style.top = e.clientY + 1 + "px";
+            });
         },
 
         tick: function() {
@@ -106,6 +121,16 @@ define(["dojo/_base/declare", "game/controller/ManController", "game/controller/
                 this.stats.LoadSave(save.stats);
                 this.resources.LoadSave(save.resources);
             }
+        },
+        DisplayTooltip: function(content, parent) {
+            this.tooltip.appendChild(content);
+            this.tooltip.style.display = "block";
+            this.capture.resume();
+        },
+        RemoveTooltip: function() {
+            d.empty(this.tooltip);
+            this.tooltip.style.display = "none";
+            this.capture.pause();
         }
     });
 });
