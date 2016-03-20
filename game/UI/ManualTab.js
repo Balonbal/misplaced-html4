@@ -14,6 +14,7 @@ define(["dojo/_base/declare", "game/core/Tab", "dojo/dom-construct", "dojo/mouse
             var clickContainer = d.create("div", { className: "w3-container w3-card-16"}, container);
 
             var left = d.create("div", {className: "w3-third w3-image", click: function() { game.manual.ManualClick(); }}, clickContainer);
+            left.style.cursor = "pointer";
             var right = d.create("div", {className: "w3-twothird"}, clickContainer);
 
             var image = d.create("img", {

@@ -15,7 +15,8 @@ define(["dojo/_base/declare"], function(declare) {
             }
             return false;
         },
-        getSave: function() {},
-        loadSave: function(savedata) {}
+        getSave: function(arr) {},
+        LoadSave: function(savedata) {},
+        Recalculate: function() {}
     });
 });

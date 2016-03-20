@@ -18,18 +18,19 @@ define(["dojo/_base/declare", "game/core/Controller", "dojo/_base/lang"], functi
         getStat: function(what) {
             return this.getMeta(what, this.stats);
         },
-        getSave: function() {
-            var arr = [];
+        getSave: function(save) {
+            save.stats = [];
             for (var s in this.stats) {
                 var stat = this.stats[s];
-                arr.push([stat.name, stat.value]);
+                save.stats.push([stat.name, stat.value]);
             }
-            return arr;
+            return save;
         },
         Update: function(delta) {
             this.getStat("playtimeOnline").value += delta;
         },
-        LoadSave: function (save) {
+        LoadSave: function (saved) {
+            var save = saved.stats;
             for (var s in save) {
                 var stat = save[s];
                 this.getStat(stat[0]).value = stat[1];
