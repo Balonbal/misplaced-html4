@@ -88,7 +88,6 @@ define(["dojo/_base/declare", "game/core/Controller", "game/core/Resource"], fun
             var savedata = save.resources;
             for (var r in savedata) {
                 var re = savedata[r];
-                console.log(re);
                 var res = this.getMeta(re[0], this.resources);
                 if (res) res.amount = re[1];
             }
