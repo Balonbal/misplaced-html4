@@ -76,17 +76,19 @@ define(["dojo/_base/declare", "game/core/Controller", "game/core/Resource"], fun
             }
             return r;
         },
-        getSave: function() {
-            var arr = [];
+        getSave: function(save) {
+            save.resources = [];
             for (var r in this.resources) {
                 var res = this.resources[r];
-                arr.push([res.name, res.amount]);
+                save.resources.push([res.name, res.amount]);
             }
-            return arr;
+            return save;
         },
-        LoadSave: function(savedata) {
+        LoadSave: function(save) {
+            var savedata = save.resources;
             for (var r in savedata) {
                 var re = savedata[r];
+                console.log(re);
                 var res = this.getMeta(re[0], this.resources);
                 if (res) res.amount = re[1];
             }

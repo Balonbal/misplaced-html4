@@ -62,12 +62,14 @@ define(["dojo/_base/declare", "game/core/Controller"], function(declare, control
 
             }
 
-        }, getSave: function() {
-            return [this.progress, this.production];
+        }, getSave: function(save) {
+            save.manual = [this.progress, this.prodName];
+            return save;
         },
-        LoadSave: function(save) {
+        LoadSave: function(saved) {
+            var save = saved.manual;
             this.progress = save[0];
-            this.production = save[1];
+            this.SetProduction(save[1]);
         },
         SetProduction: function(what, loop) {
             var prod = this.getMeta(what, this.productions);
@@ -80,8 +82,13 @@ define(["dojo/_base/declare", "game/core/Controller"], function(declare, control
                 //Hook for display to update
                 this.prodName = what;
             }
+        },
+        Recalculate: function() {
+            /** UPGRADES **/
+            var base = this.getMeta(this.prodName, this.productions)
 
-
+            this.maxProgress = base.maxProgress * (game.upgrades.HasUpgrade("Idler Beginner") ? 2 : 1);
+            this.depletion = base.depletion * (game.upgrades.HasUpgrade("Clicker Beginner") ? 2 : 1);
         }
     });
 });

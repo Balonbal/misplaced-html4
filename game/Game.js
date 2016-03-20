@@ -22,30 +22,10 @@ define(["dojo/_base/declare", "game/controller/ManController", "game/controller/
             this.controllers.push(this.resources);
             this.controllers.push(this.upgrades);
 
-            var animationC = new TabContainer(l("animationPane"));
-            var statisticsC = new TabContainer(l("statisticsPane"));
-            var managementC = new TabContainer(l("managementPane"));
-
-            animationC.AddTab(new ManTab("Manual",this), true);
-            statisticsC.AddTab(new StatTab("Stats", this), true);
-            statisticsC.AddTab(new ResTab("Resources", this), true);
-            managementC.AddTab(new SaveTab("Save", this), true);
-            managementC.AddTab(new UpgradeTab("Upgrades", this), true);
-
-            this.tabContainers = [
-                animationC,
-                statisticsC,
-                managementC
-            ];
             this.lastTick = Date.now();
         },
 
         init: function() {
-            for (var t in this.tabContainers) {
-                var tab = this.tabContainers[t];
-                tab.ChangeTab(tab.tabs[0]);
-            }
-
             this.manual.SetProduction("lootWreckage", true);
 
             //Load save
@@ -63,6 +43,27 @@ define(["dojo/_base/declare", "game/controller/ManController", "game/controller/
             this.timer.AddEvent(function() {
                 game.Save();
             }, 6000);
+
+            var animationC = new TabContainer(l("animationPane"));
+            var statisticsC = new TabContainer(l("statisticsPane"));
+            var managementC = new TabContainer(l("managementPane"));
+
+            animationC.AddTab(new ManTab("Manual",this), true);
+            statisticsC.AddTab(new ResTab("Resources", this), true);
+            statisticsC.AddTab(new StatTab("Stats", this), true);
+            managementC.AddTab(new UpgradeTab("Upgrades", this), true);
+            managementC.AddTab(new SaveTab("Save", this), true);
+
+            this.tabContainers = [
+                animationC,
+                statisticsC,
+                managementC
+            ];
+
+            for (var t in this.tabContainers) {
+                var tab = this.tabContainers[t];
+                tab.ChangeTab(tab.tabs[0]);
+            }
 
             /* Tooltip */
             this.tooltip = d.create("div", {
@@ -96,9 +97,9 @@ define(["dojo/_base/declare", "game/controller/ManController", "game/controller/
         CreateSave: function() {
             var arr = {};
             arr.lastTick = this.lastTick;
-            arr.stats = this.stats.getSave();
-            arr.manual = this.manual.getSave();
-            arr.resources = this.resources.getSave();
+            for (var c in this.controllers) {
+                this.controllers[c].getSave(arr);
+            }
             return arr;
         },
         Save: function() {
@@ -117,9 +118,9 @@ define(["dojo/_base/declare", "game/controller/ManController", "game/controller/
             }
             //Call loaders
             if (save) {
-                this.manual.LoadSave(save.manual);
-                this.stats.LoadSave(save.stats);
-                this.resources.LoadSave(save.resources);
+                for (var c in this.controllers) {
+                    this.controllers[c].LoadSave(save);
+                }
             }
         },
         DisplayTooltip: function(content) {
@@ -131,6 +132,12 @@ define(["dojo/_base/declare", "game/controller/ManController", "game/controller/
         RemoveTooltip: function() {
             this.tooltip.style.display = "none";
             this.capture.pause();
+        },
+        Recalculate: function() {
+            for (var controller in this.controllers) {
+                var c = this.controllers[controller];
+                c.Recalculate();
+            }
         }
     });
 });

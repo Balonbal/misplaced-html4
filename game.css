@@ -68,7 +68,7 @@ body {
 .meter > span {
     position: absolute;
     left:50%;
-    z-index: 50;
+    z-index: 5;
 }
 
 .workerGatherer {
@@ -107,18 +107,14 @@ body {
 
 .tooltip q {
     float:right;
-    display: table-footer-group;
-}
-
-.price {
-    display: table-header-group;
+    font-family: cursive;
+    font-size: .7em;
 }
 .upgrade {
     background-image: url("images/upgrades.png");
     width: 48px;
     height: 48px;
-    margin: 5px;
-    float: left;
+    margin: 4px;
     position: relative;
 }
 
@@ -129,7 +125,7 @@ body {
     height: 56px;
     left: -4px;
     top: -4px;
-    background-color: rgba(255, 255, 255, .20);
+    background: rgba(255, 255, 255, .20) url("images/Container.png");
 
 }
 
@@ -156,28 +152,11 @@ body {
     float: left;
 }
 
-.threedee {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform-style: preserve-3d;
-    transform-origin: 50% 50% 50%;
-    backface-visibility: hidden;
-}
-.assembly {
-    /*animation: spin 60s linear infinite;*/
-}
-
-.brick-right {
-    transform: rotateY(99deg) rotateZ(-30deg) rotateX(0deg);
-}
-
-.brick-down {
-    transform: rotateY(-1deg) rotateZ(0deg) rotateY(2deg);
-}
-
-@keyframes spin {
-    to {
-        transform: rotateY(360deg) rotateZ(360deg) rotateX(720deg);
-    }
+.popup {
+    position: fixed;
+    background-color: rgb(105, 105, 105);
+    width: 75vw;
+    height: 85vh;
+    margin: 7.5vh 12.5vw;
+    z-index: 10;
 }

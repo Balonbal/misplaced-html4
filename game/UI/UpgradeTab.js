@@ -13,7 +13,7 @@ define(["dojo/_base/declare", "game/core/Tab", "dojo/dom-construct", "dojo/on", 
                 var upgradeBox = d.create("div", {
                     className: "box upgrade",
                     //Use correct part of the image
-                    style: "background-position: " + upgrade.icon.x + "px " + upgrade.icon.y + "px;"
+                    style: "background-position: " + upgrade.icon.x + "px " + upgrade.icon.y + "px; float: left"
                 }, container);
                 //Tooltip hook
                  on(upgradeBox, mouse.enter, lang.hitch(this, function(up) {
@@ -37,6 +37,7 @@ define(["dojo/_base/declare", "game/core/Tab", "dojo/dom-construct", "dojo/on", 
                         d.destroy(upgradeBox);
                         console.log("Upgrade bought: " + up.name);
                         game.RemoveTooltip();
+                        this.render(container); //Shady hack, please fix
                     }
                 }, upgrade, upgradeBox));
 

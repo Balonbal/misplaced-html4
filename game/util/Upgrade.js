@@ -3,11 +3,14 @@
  */
 define(["dojo/_base/declare"] , function (declare) {
     return declare(null, {
-        constructor: function(name, description, price, icon, onBoughtHandle) {
+        constructor: function(name, category, description, price, icon, requires, locks, onBoughtHandle) {
             this.name = name;
             this.description = description;
+            this.category = category;
             this.price = price;
             this.icon = icon;
+            if (requires) this.requires = requires;
+            if (locks) this.locks = locks;
             if (onBoughtHandle) this.onBoughtHandle = onBoughtHandle;
         },
         GetPrice: function(resource) {
