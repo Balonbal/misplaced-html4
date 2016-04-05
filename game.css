@@ -1,3 +1,8 @@
+@font-face {
+    font-family: Journal;
+    src: url("fonts/JOURNAL.TTF")
+}
+
 a {
     color: white;
 }
@@ -159,4 +164,17 @@ body {
     height: 85vh;
     margin: 7.5vh 12.5vw;
     z-index: 10;
+}
+
+.tab > h3 {
+    color: rgb(34, 139, 34);
+    margin: auto;
+}
+
+.journal {
+    width: 90%;
+    margin: auto;
+    background: rgba(60, 60, 60, .8);
+    font-family: monospace;
+    font-size: 1.2em;
 }

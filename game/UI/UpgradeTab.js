@@ -7,14 +7,15 @@ define(["dojo/_base/declare", "game/core/Tab", "dojo/dom-construct", "dojo/on", 
         render: function(container) {
             (container) || (container = this.parent);
             d.empty(container);
-            d.create("h3", {innerHTML: "Upgrades"}, container);
+            var availBox = d.create("div", null, container);
+            d.create("h3", {innerHTML: "Upgrades"}, availBox); //Header
             for (var u in this.game.upgrades.upgradesAvailable) {
                 var upgrade = this.game.upgrades.upgradesAvailable[u];
                 var upgradeBox = d.create("div", {
                     className: "box upgrade",
                     //Use correct part of the image
                     style: "background-position: " + upgrade.icon.x + "px " + upgrade.icon.y + "px; float: left"
-                }, container);
+                }, availBox);
                 //Tooltip hook
                  on(upgradeBox, mouse.enter, lang.hitch(this, function(up) {
                      var base = d.create("div", null, null);

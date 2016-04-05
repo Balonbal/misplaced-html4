@@ -18,19 +18,17 @@ define(["dojo/_base/declare", "dojo/dom-construct", "dojo/on", "dojo/_base/lang"
         },
         AddTab: function(tab, visible) {
             this.tabs.push(tab);
-            if (visible) {
-                var li = d.create("li", null, this.menu);
-                var a = d.create("a", {
-                    href: "javascript:void(0)",
-                    innerHTML: tab.title
-                }, li);
-                tab.li = li;
-                on(li, "click", lang.hitch(this, function() {
-                    this.ChangeTab(tab);
-                }));
-                if (!this.activeTab) {
-                    this.activeTab = tab;
-                }
+            var li = d.create("li", {style: "display: " + (visible ? "block" : "none")}, this.menu);
+            var a = d.create("a", {
+                href: "javascript:void(0)",
+                innerHTML: tab.title
+            }, li);
+            tab.li = li;
+            on(li, "click", lang.hitch(this, function() {
+                this.ChangeTab(tab);
+            }));
+            if (!this.activeTab) {
+                this.activeTab = tab;
             }
         },
         ChangeTab: function(tab) {
@@ -42,6 +40,12 @@ define(["dojo/_base/declare", "dojo/dom-construct", "dojo/on", "dojo/_base/lang"
         },
         Update: function (delta) {
             this.activeTab.update(delta);
+            for (var t in this.tabs) {
+                var tab = this.tabs[t];
+                if (tab.unlocked) {
+                    tab.li.style.display = tab.unlocked() ? "block" : "none";
+                }
+            }
         }
     });
 });

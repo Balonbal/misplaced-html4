@@ -3,7 +3,7 @@
  */
 "use strict";
 function l(l) {return dojo.byId(l);}
-define(["dojo/_base/declare", "game/controller/ManController", "game/controller/StatsController", "game/controller/ResourceController", "game/UI/ManualTab", "game/UI/StatsTab", "game/UI/ResourcesTab", "game/core/Timer", "game/core/TabContainer", "game/UI/SaveTab", "game/controller/UpgradeController", "game/UI/UpgradeTab", "dojo/dom-construct", "dojo/on"], function(declare, man, stat, res, ManTab, StatTab, ResTab, Timer, TabContainer, SaveTab, upg, UpgradeTab, d, on) {
+define(["dojo/_base/declare", "game/controller/ManController", "game/controller/StatsController", "game/controller/ResourceController", "game/UI/ManualTab", "game/UI/StatsTab", "game/UI/ResourcesTab", "game/core/Timer", "game/core/TabContainer", "game/UI/SaveTab", "game/controller/UpgradeController", "game/UI/UpgradeTab", "game/controller/StoryController", "game/UI/StoryTab", "dojo/dom-construct", "dojo/on"], function(declare, man, stat, res, ManTab, StatTab, ResTab, Timer, TabContainer, SaveTab, upg, UpgradeTab, sto, StoryTab, d, on) {
     return declare(null, {
         tabContainers: [],
         controllers: [],
@@ -17,9 +17,11 @@ define(["dojo/_base/declare", "game/controller/ManController", "game/controller/
             this.manual = new man(this);
             this.resources = new res(this);
             this.upgrades = new upg(this);
+            this.story = new sto(this);
             this.controllers.push(this.stats);
             this.controllers.push(this.manual);
             this.controllers.push(this.resources);
+            this.controllers.push(this.upgrades);
             this.controllers.push(this.upgrades);
 
             this.lastTick = Date.now();
@@ -51,6 +53,7 @@ define(["dojo/_base/declare", "game/controller/ManController", "game/controller/
             animationC.AddTab(new ManTab("Manual",this), true);
             statisticsC.AddTab(new ResTab("Resources", this), true);
             statisticsC.AddTab(new StatTab("Stats", this), true);
+            statisticsC.AddTab(new StoryTab("Story", this), false);
             managementC.AddTab(new UpgradeTab("Upgrades", this), true);
             managementC.AddTab(new SaveTab("Save", this), true);
 

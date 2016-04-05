@@ -32,8 +32,8 @@ define(["dojo/_base/declare"] , function (declare) {
                 for (var res in this.price) {
                     var r = this.price[res];
                     game.resources.getResource(r.name).amount -= this.GetPrice(r.name);
-                    if (this.onBoughtHandle) this.onBoughtHandle();
                 }
+                if (this.onBoughtHandle) this.onBoughtHandle();
             }
         }
     });

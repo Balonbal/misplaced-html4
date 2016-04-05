@@ -11,12 +11,14 @@ define(["dojo/_base/declare"], function(declare) {
         visible: false,
         constructor: function(title, game) {
             this.title = title;
+            this.name = title;
             this.parent = parent;
             this.game = game;
         },
         render: function(content) {
         },
         update: function() {
-        }
+        },
+        unlocked: function() { return true;}
     });
 });
